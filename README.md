@@ -23,3 +23,9 @@ The class generates a board with a safe first play space when this is called for
 | 2 | Game won |
 
 After each call to *.process_play(x, y)* the known board is printed to the command window with '?' representing unknown spaces and numbers representing adjacent mines to explored spaces.
+
+The known board can be retrieved with:
+
+> game.get_known_board()
+
+This returns a 2D array with the same format as the print out, *game.get_known_board()[0]\[0]* is the lower left corner of the print out, and *game.get_known_board()[width - 1]\[height - 1]* is the upper right.
