@@ -1,2 +1,23 @@
 # Commandline-Sweeper
 Basic Minesweeper program for use in a final group project for SFU CMPT-827 Spring 2020.
+
+*Minesweeper.py*:
+
+An importable Minesweeper class, initialize with:
+
+> import Minesweeper as ms 
+> game = Minesweeper(width=10, height=10, mines=10)
+
+Default width, height, and number of mines are 10, minimum board size is 2x2 and minimum number of mines is 1. Number of mines must be less than width\*height
+
+To play a space at coordinate (x, y) call:
+
+> game.process_play(x, y)
+
+The class generates a board with a safe first play space when this is called for the first time. *.process_play(x, y)* returns as *state, turns* where state is the current game state as listed below, and the number of turns is the number of calls to *.process_play(x, y)*.
+
+| **State** | **Description** |
+|---|---|
+| 0 | Game ongoing |
+| 1 | Game lost |
+| 2 | Game won |
