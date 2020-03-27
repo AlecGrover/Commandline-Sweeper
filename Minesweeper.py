@@ -108,7 +108,11 @@ class Minesweeper:
             # print("Found {0} mines adjacent to ({1}, {2})".format(found, x, y))
             return 0, self._turns
 
+    def get_known_board(self):
+        return self._display_board.copy()
+
 
 # new_minesweeper = Minesweeper()
 # # new_minesweeper.print_board()
 # win, turns = new_minesweeper.process_play(0, 0)
+# print(new_minesweeper.get_known_board())
