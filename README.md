@@ -21,3 +21,5 @@ The class generates a board with a safe first play space when this is called for
 | 0 | Game ongoing |
 | 1 | Game lost |
 | 2 | Game won |
+
+After each call to *.process_play(x, y)* the known board is printed to the command window with '?' representing unknown spaces and numbers representing adjacent mines to explored spaces.
