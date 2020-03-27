@@ -3,12 +3,22 @@ import random as r
 
 class Minesweeper:
     def __init__(self, width=10, height=10, mines=10):
+        if width <= 1 or height <= 1:
+            print("Board must be at least 2x2")
+            return 1, 0
+        if mines < 1:
+            print("There must be at least 1 mine")
+            return 1, 0
+        self._max_turns = width * height - mines
+        if self._max_turns <= 0:
+            print("There must be at least 1 safe space")
+            return 1, 0
         self._width = width
         self._height = height
         self._mines = mines
         self._board = [[0 for y in range(height)] for x in range(width)]
         self._turns = 0
-        self._max_turns = width * height - mines
+        self._played_spaces = 0
         self._display_board = [["?" for y in range(height)] for x in range(width)]
 
     def generate_mines(self, x, y):
@@ -66,6 +76,7 @@ class Minesweeper:
             if y < self._height - 1 and self._display_board[x][y + 1] == "?":
                 self.minesweep(x, y + 1)
 
+        self._played_spaces += 1
         return found_mines
 
     def print_board(self):
@@ -80,6 +91,9 @@ class Minesweeper:
             self._turns += 1
             found = self.minesweep(x, y)
             self.print_board()
+            if self._played_spaces == self._max_turns:
+                print("All safe spaces played, you win!")
+                return 2, self._turns
             return 0, self._turns
         elif self._board[x][y] == -1:
             print("Mine at ({0},{1})! Game Over!".format(x, y))
@@ -88,7 +102,7 @@ class Minesweeper:
             found = self.minesweep(x, y)
             self._turns += 1
             self.print_board()
-            if self._turns == self._max_turns:
+            if self._played_spaces == self._max_turns:
                 print("All safe spaces played, you win!")
                 return 2, self._turns
             # print("Found {0} mines adjacent to ({1}, {2})".format(found, x, y))
