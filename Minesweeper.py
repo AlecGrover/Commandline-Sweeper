@@ -1,5 +1,30 @@
 import random as r
 
+"""
+Minesweeper Class:
+Functions:
+External:
+    process_play(x, y):
+        returns status, turns
+            status - current game state:
+                * 0 - game in progress
+                * 1 - game lost
+                * 2 - game won
+            turns - number of player initiated turns
+            
+    get_known_board():
+        returns display_board
+            display_board - 2d array [x.y] with with characters at each
+            index representing the currently known state of that
+            coordinate:
+                * '?' - unknown space
+                *  0  - 'blank' space
+                *  n  - where n is an integer in [1,8] representing the
+                        number of adjacent mines
+
+
+"""
+
 
 class Minesweeper:
     def __init__(self, width=10, height=10, mines=10):
@@ -112,7 +137,7 @@ class Minesweeper:
         return self._display_board.copy()
 
 
-# new_minesweeper = Minesweeper()
-# # new_minesweeper.print_board()
-# win, turns = new_minesweeper.process_play(0, 0)
-# print(new_minesweeper.get_known_board())
+new_minesweeper = Minesweeper()
+# new_minesweeper.print_board()
+win, turns = new_minesweeper.process_play(0, 0)
+print(new_minesweeper.get_known_board())
