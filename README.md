@@ -29,3 +29,13 @@ The known board can be retrieved with:
 > game.get_known_board()
 
 This returns a 2D array with the same format as the print out, *game.get_known_board()[0]\[0]* is the lower left corner of the print out, and *game.get_known_board()[width - 1]\[height - 1]* is the upper right.
+
+*generate.py*:
+
+Importable function to return a list of lists containing all sets of "offset" tuples for a given *n* neighbors.
+
+Call with:
+
+> get_offsets(n)
+
+Offset tuples are in the format (x, y) where x and y are each in the set [-1, 0, 1] representing the "offset" in that direction of a given space.
