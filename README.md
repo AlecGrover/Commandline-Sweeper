@@ -39,3 +39,11 @@ Call with:
 > get_offsets(n)
 
 Offset tuples are in the format (x, y) where x and y are each in the set [-1, 0, 1] representing the "offset" in that direction of a given space.
+
+*get_offsets* has the additional optional boolean parameters *top*, *bottom*, *left*, and *right*. When set to true in the function call *get_offsets* will only return combinations that do not extend beyond that border.
+
+e.g.
+
+> python generate.py
+> >>>get_offsets(3, top=True)
+> [((1, 0), (1, -1), (0, -1)), ((1, 0), (1, -1), (-1, -1)), ((1, 0), (1, -1), (-1, 0)), ((1, 0), (0, -1), (-1, -1)), ((1, 0), (0, -1), (-1, 0)), ((1, 0), (-1, -1), (-1, 0)), ((1, -1), (0, -1), (-1, -1)), ((1, -1), (0, -1), (-1, 0)), ((1, -1), (-1, -1), (-1, 0)), ((0, -1), (-1, -1), (-1, 0))]
