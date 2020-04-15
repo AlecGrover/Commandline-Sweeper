@@ -69,11 +69,11 @@ def clause_to_string(clause):
 		ret += " {}".format(str(clause[i]))
 	return ret
 
-def offsets_to_constraints(i, j, offsets, filename, curr_board):
-	f = open(filename, "w")
+def offsets_to_constraints(i, j, offsets, curr_board):
+	to_write = ""
 	# f.write("Now the file has more content!")
 	constraints = []
-	print("\nat cell ({},{}) constraints are:".format(i,j))
+	# print("\nat cell ({},{}) constraints are:".format(i,j))
 	for combination in offsets:
 		clause = []
 		for offset in combination:
@@ -85,14 +85,20 @@ def offsets_to_constraints(i, j, offsets, filename, curr_board):
 			else:
 				clause = []
 				break
-		if clause:
+		if clause != []:
 			clause = find_negative_constraints(clause, i, j, curr_board)
 			clause = clause_to_string(clause)
-			print(clause)
-	return constraints
+			to_write += clause+"\n"
+	return to_write
+
+def save_constraints(to_write, filename):
+	f = open(filename, "w")
+	f.write(to_write)
+	print("Constraints have been generated and saved into {}".format(filename))
+	return 0
 
 def generate_constraints(curr_board, filename="constraints.txt"):
-	constraints = []
+	constraints = ""
 	for i in range(len(curr_board)):
 		row = curr_board[i]
 		for j in range(len(row)):
@@ -104,7 +110,8 @@ def generate_constraints(curr_board, filename="constraints.txt"):
 				# find offsets
 				offsets = get_offsets(n, top, bottom, left, right)
 				if offsets != [()]:
-					offsets_to_constraints(i, j, offsets, filename, curr_board)
+					constraints += offsets_to_constraints(i, j, offsets, curr_board)
+	print(constraints)
+	save_constraints(constraints, filename)
+	return 0
 	
-	# save_constraints(constraints, filename)
-	print("Constraints have been generated and saved into {}".format(filename))
