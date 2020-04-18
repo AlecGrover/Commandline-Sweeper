@@ -2,6 +2,31 @@ import random
 import time
 import itertools
 import copy
+'''
+DPLL SAT solver 
+
+HOW TO USE: 
+
+1) just need to call: 
+    sol = DPLL( VARS, clauses, assignment=[])
+
+    VARS = # vars, so for minesweeper its nxn. I.e 5x5 board VARS = 25
+    clauses = CNF clauses in the form: [[1,2,3], [-1,2,3], ..., [-1,-2,-3]]
+    Each integer in the clause should represent a unique cell on minesweeper board
+    assignments = [] , gets filled while doing backtracking part of alg
+
+2) Get var assignments
+
+    Looking at 'def main():'
+    i) if 'UNSAT' program returns false
+
+    ii) if 'SAT' program returns valid variable assignment 
+
+
+'''
+
+
+
 
 
 def test_sat():
