@@ -1,3 +1,68 @@
+import random
+import time
+import itertools
+import copy
+
+
+def test_sat():
+
+    ''' 
+    Clause assignment to check if it works 
+    c1 :- a v b v c 
+    c2 :- -a v b v c 
+    c3 :- a v -b v c 
+    c4 :- a v b v -c 
+
+    EXPECTED OUTPUT: [1, 2, -3] for SAT 
+    '''
+    res = []
+
+    res.append([1,2,3])
+    res.append([-1,2,3])
+    res.append([1,-2,3])
+    res.append([1,2,-3])
+    res.append([-1,-2,-3])
+   
+    return res
+def test_unsat():
+    '''
+    Clause assignment to check if it works 
+    for 3CNF needs at least 2^3 = 8 clauses to show simple UNSAT
+    c1 :- a v b v c 
+    c2 :- a v b v -c 
+    c3 :- a v -b v c 
+    c4 :- a v -b v -c 
+    c5 :- -a v b v c 
+    c6 :- -a v b v -c 
+    c7 :- -a v -b v c 
+    c8 :- -a v -b v -c 
+
+    EXPECTED OUTPUT: [1, 2, -3] for SAT 
+    '''
+    res = []
+    res.append([1,2,3])
+    res.append([1,2,-3])
+    res.append([1,-2,3])
+    res.append([1,-2,-3])
+    res.append([-1,2,3])
+
+    res.append([-1,2,-3])
+    res.append([-1,-2,3])
+    res.append([-1,-2,-3])
+    return res
+
+def test_sat_2():
+    ''' 
+    EXPECTED ASSIGNMENT 
+    Positive: [1, 2, 3, 4, 6, 7, 9]
+    Negative: [-5, -8, -10]
+    '''
+    res = []
+    res = [[4,-5,6], [9, 1, -8],[1, -8, -5], [9, 7, 1],[1 ,-10, -5],[6, 3, 1],[-8, -5, 7],[-8, 6, -8],[2, 3, 7],[6, 2, -10],[7,4,-10],[7, 4, -8],[7, 4, 9], [2, 6, 9],[-8, -10, -8],
+    [1, -8, 3],[-5, -8, 3],[9, -10, 4],[3, 9, 1],[-5, -5, 3],[2, 9, 1] ,[-5, 6, 7],[4, 1, 9] ,[4, -8, -8],[6, 4, 7] ,[3, 9, -8],[3, -10, 9] ,[7, 4, -8],[3, -10, -5],[6, 2, 1]]
+
+    return res
+
 # BACKTRACKING DPLL Algorithm
 
 '''
@@ -22,9 +87,6 @@ return DPLL(A and L  ) or DPLL (A and not L )
 '''
 def DPLL(VARS, instance, assignment):
 
-    if len(VARS) == 0: 
-        return instance
-
     instance = propagate_units(instance)
     instance = pure_elim(instance)
 
@@ -40,12 +102,13 @@ def DPLL(VARS, instance, assignment):
     assignment = copy.deepcopy(assignment)
 
    # Choose next lteral to assign value in model
-    nxtLit = choose_next_lit(instance)
+    # nxtLit = choose_next_lit(instance)
+    nxtLit = select_literal(instance)
     assignment.append(nxtLit)
 
     #Check is we reached valid assignment
-    if checkValidAssignment(VARS, assignment) == True:
-        return instance
+    # if checkValidAssignment(VARS, assignment) == True:
+    #     return instance
 
     # Deepcopy to prevent state overwrite while backtracking
     # CC is copy of instance -> (set of all our clauses)
@@ -66,6 +129,12 @@ def DPLL(VARS, instance, assignment):
     except:
         print("If you reached here you fucked up ")
 
+def select_literal(cnf):
+    for c in cnf:
+        for literal in c:
+            return literal
+
+
 def checkAllTrue(instance):
     # Check if all vars can be assigned true
     v = set()
@@ -82,56 +151,8 @@ def checkValidAssignment(VARS, assignment):
         # print("SUCCESS: Valid Assignment Found!")
         return True
     else:
-        # temp = VARS
-        # for x in VARS:
-        #     if x in assignment:
-        #         temp.remove(x)
-        # print("VARS: ", VARS)
-        # print("Assignment: ",assignment)
-        # print("Assignment Err: ",temp )
-        return False
-
-
-def solve_dpll(instance, verbosity):
-    # print(instance)
-    # instance.VARS goes 1 to N in a dict
-    # print(instance.VARS)
-    # print(verbosity)
-    
-    clauses = instance.clauses
-    variables = instance.VARS
-
-    sol = DPLL(variables, clauses, [])
-    # Pos/ Neg Literals stored in sets to preserve uniqueness
-    posVar, negVar = set(), set()
    
-    # If our sol contains empty clause -> UNSAT 
-    if sol == []:
-        print("UNSAT")
         return False
-    else:  
-        print("SAT")
-        # Check if user wants Pos and Neg Vars
-        if verbosity == True:
-            for clause in sol:
-                for literal in clause:
-                    # Add Pos and Neg Literals to set
-                    if literal > 0:
-                        posVar.add(literal)
-                    if literal < 0:
-                        negVar.add(literal)
-       
-            # Format set(posVar) into list(posVar) for correctness & sort by ascending literals
-            posVar = list(posVar)
-            posVar.sort()
-            print(posVar)
-
-            # ~~~~~ DEBUG ~~~~~
-            # negVar = list(negVar)
-            # negVar.sort(reverse=True)  
-            # print(negVar)
-
-    return True
 
 # Get next literal to assign based on the # of occurances in list of clauses 
 def choose_next_lit(instance):
@@ -165,13 +186,6 @@ def choose_next_lit(instance):
                     maxWeight = weight[literal]
                     next_lit = literal
     return next_lit
-
-# Just for testing test_sat.cnf 
-def nxtLitTest(instance, maxRecurDepth):
-    if len(instance) > maxRecurDepth:
-        return False 
-    else:
-        return True
 
 #Handles Unit Clauses 
 def propagate_units(instance):
@@ -250,3 +264,55 @@ def getPure(instance):
             pures.add(lit)
     
     return pures
+
+
+def main():
+   
+    print("~~~ Beginning Execution ~~~")
+
+    #clauses = test_sat()
+    clauses = test_sat_2()
+    #clauses = test_unsat()
+    print(f'Clauses: {clauses}')
+
+    # Variables = board size in minesweeper i.e. 5x5 = 25 
+    VARS = [1,2,3,4,5,6,7,8,9,10]
+
+
+    sol = DPLL( VARS, clauses, assignment=[])
+
+    # Pos/ Neg Literals Assignment
+    posVar, negVar = set(), set()
+
+    # If our sol contains empty clause -> UNSAT 
+    if sol == []:
+        print("UNSAT")
+        return False
+    else:  
+        print("SAT")
+        # Prints variable assignment 
+        for clause in sol:
+            for literal in clause:
+                # Add Pos and Neg Literals to set
+                if literal > 0:
+                    posVar.add(literal)
+                if literal < 0:
+                    negVar.add(literal)
+    
+        
+        # PRINTS OUT VARIBALE ASSIGNMENT 
+        # Format set(posVar) into list(posVar) for correctness & sort by ascending literals
+        posVar = list(posVar)
+        negVar = list(negVar)
+        posVar.sort()
+        negVar.sort()
+        reverseNeg = negVar[::-1]
+        print(f'Positive: {posVar}')
+        print(f'Negative: {reverseNeg}')
+       
+    return True
+
+
+
+if __name__ == "__main__":
+    main()
