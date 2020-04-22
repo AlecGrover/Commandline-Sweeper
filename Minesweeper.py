@@ -1,5 +1,5 @@
 import random as r
-
+from generate import generate_constraints
 """
 Minesweeper Class:
 Functions:
@@ -140,4 +140,7 @@ class Minesweeper:
 new_minesweeper = Minesweeper()
 # new_minesweeper.print_board()
 win, turns = new_minesweeper.process_play(0, 0)
-print(new_minesweeper.get_known_board())
+
+curr_board = new_minesweeper.get_known_board()
+print(curr_board)
+generate_constraints(curr_board)

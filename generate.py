@@ -30,7 +30,6 @@ def get_offsets(n, top=False, bottom=False, left=False, right=False):
         offsets = [(1, 1), (1, 0), (1, -1), (0, -1), (0, 1)]
         return [offset_set for offset_set in itertools.combinations(offsets, n)]
 
-
 def is_edge(curr_board, i, j):
 	top=False
 	bottom=False
@@ -50,6 +49,10 @@ def is_edge(curr_board, i, j):
 		top = True
 	return (top, bottom, left, right)
 
+def translate(point, row_len):
+	x, y = point
+	return x*row_len + y
+
 def find_negative_constraints(clause, i, j, curr_board):
 	offsets_cpmr = [(1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1), (0, 1)]
 	# negate all neighbors that are enforced in the clause
@@ -57,10 +60,11 @@ def find_negative_constraints(clause, i, j, curr_board):
 		point = (i+offset[0], j+offset[1])
 		# check if point is not out of bounds
 		if point[0] >= 0 and point[0] <= (len(curr_board)-1) and point[1] >= 0 and point[1] <= (len(curr_board[0])-1):
-			if point not in clause:
+			point_translated = translate(point, len(curr_board[0]))
+			if point_translated not in clause:
 				# check if point is not explored already
 				if curr_board[point[0]][point[1]] == "?":
-					clause.append("-{}".format(point))
+					clause.append("-{}".format(point_translated))
 	return clause
 
 def clause_to_string(clause):
@@ -81,7 +85,7 @@ def offsets_to_constraints(i, j, offsets, curr_board):
 			# add to constraints only if not explored
 			if curr_board[point[0]][point[1]] == "?":
 				# cell_id = len(curr_board[0])*point[0] + point[1]
-				clause.append(point)
+				clause.append(translate(point, len(curr_board[0])))
 			else:
 				clause = []
 				break
