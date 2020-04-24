@@ -28,7 +28,7 @@ External:
 
 
 class Minesweeper:
-    def __init__(self, width=10, height=10, mines=10):
+    def __init__(self, width=4, height=4, mines=2):
         if width <= 1 or height <= 1:
             print("Board must be at least 2x2")
             return 1, 0
@@ -148,18 +148,18 @@ def random_choice(curr_board):
                 ret.append((i,j))
     return ret[r.randint(0, len(ret)-1)]
 
-def getBoardCords(n):
+def getCellIDs(n):
     cords = []
     count = 0
     for i in range(n):
         for j in range(n):
-            count +=1
             cords.append([count, i, j])
+            count +=1
 
     print(f'Cordinates: {cords}')
     return cords
 
-def convertCord(cords,target):
+def cellIDtoCordinate(cords,target):
     # Conovert into X, Y  cordinates
     res = []
     for cord in cords: 
@@ -171,41 +171,69 @@ def convertCord(cords,target):
 
 def main(): 
     # Get minesweeper grid
-    cords = getBoardCords(10)
+    cords = getCellIDs(4)
     
+    # Make first move
     new_minesweeper = Minesweeper()
     # new_minesweeper.print_board()
     win, turns = new_minesweeper.process_play(0, 0)
 
-    curr_board = new_minesweeper.get_known_board()
-    print(curr_board)
 
-    clauses = generate_constraints(curr_board)
-    # VARS = NxN xN 
-    VARS = list(range(0,100))
-    res, allowedMoves = solveDPLL(VARS, clauses, assignment = [])
+    itrCount = 0
+    # Game loop
+    while(win == 0):
+        curr_board = new_minesweeper.get_known_board()
+        print(curr_board)
 
-    # failCount = 0 
-    # succCount =0 
-    # if res == False:
-    #     failCount +=1 
-    # else:
-    #     succCount +=1 
+        # Generate clauses
+        clauses = generate_constraints(curr_board)
+        # VARS = NxN xN 
+        VARS = list(range(0,100))
+
+
+        # Call DPLL 
+        res, allowedMoves = solveDPLL(VARS, clauses, assignment = [])
+        print(f'Allowed Moves: {allowedMoves}')
+
+
+        '''
+        ~~~~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~
+        TO ADD
+
+        if allowedMoves == []:
+            target = RANDOM PICK
+        else:
+            target = allowedMoves[0]
+        '''
+
+        target = allowedMoves[0]
+        print(f'Target:  {target}')
+
+        '''
+        ~~~~~~~~~~~~~~~~
+        ~~~~~~~~~~~~~~~~
+        '''
+
+
+        # Convert cell ID -> grid cordinate
+        # using -target because we using Pos SAT assigned values
+        mx,my = cellIDtoCordinate(cords, target)
+        print(f'Making Move at cords: {mx},{my}')
         
-    print(f'Allowed Moves: {allowedMoves}')
+        # Make next move
+        new_minesweeper.process_play(mx,my)
+
+        print(f'ITER #: {itrCount}')
+        itrCount +=1 
     
 
-    #  Get first of allowed moves
-    target = allowedMoves[0]
-    print(f'target:  {target}')
-
-    # Choose first allowed moves 
-    mx,my = convertCord(cords, target)
-    print(f'Making Move at cords: {mx},{my}')
-
-    new_minesweeper.process_play(mx,my)
-    curr_board = new_minesweeper.get_known_board()
-    print(curr_board)
+    lossCount =0 
+    winCount = 0
+    if win == 2:
+        winCount += 1 
+    elif win == 1:
+        lossCount += 1
 
 
 
