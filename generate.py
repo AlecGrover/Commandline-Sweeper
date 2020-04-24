@@ -1,5 +1,5 @@
 import itertools
-
+from sympy.logic.boolalg import to_cnf
 
 def get_offsets(n, top=False, bottom=False, left=False, right=False):
     if not top and not bottom and not left and not right:
@@ -51,7 +51,7 @@ def is_edge(curr_board, i, j):
 
 def translate(point, row_len):
 	x, y = point
-	return x*row_len + y
+	return "x"+str(x*row_len + y)
 
 def find_negative_constraints(clause, i, j, curr_board):
 	offsets_cpmr = [(1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1), (0, 1)]
@@ -64,20 +64,27 @@ def find_negative_constraints(clause, i, j, curr_board):
 			if point_translated not in clause:
 				# check if point is not explored already
 				if curr_board[point[0]][point[1]] == "?":
-					clause.append("-{}".format(point_translated))
+					clause.append("~{}".format(point_translated))
 	return clause
 
 def clause_to_string(clause):
 	ret = "{}".format(str(clause[0]))
 	for i in range(1, len(clause)):
-		ret += " {}".format(str(clause[i]))
+		ret += " & {}".format(str(clause[i]))
+	return ret
+
+def format_correctly(to_write, op):
+	ret = "("
+	for elem in to_write:
+		ret += elem 
+		if elem != to_write[-1]:
+			ret += " {} ".format(op)
+	ret += ")"
 	return ret
 
 def offsets_to_constraints(i, j, offsets, curr_board):
-	to_write = ""
-	# f.write("Now the file has more content!")
-	constraints = []
-	# print("\nat cell ({},{}) constraints are:".format(i,j))
+	print("\ncell ({},{})".format(i, j))
+	to_write = []
 	for combination in offsets:
 		clause = []
 		for offset in combination:
@@ -92,17 +99,21 @@ def offsets_to_constraints(i, j, offsets, curr_board):
 		if clause != []:
 			clause = find_negative_constraints(clause, i, j, curr_board)
 			clause = clause_to_string(clause)
-			to_write += clause+"\n"
-	return to_write
+			to_write.append("("+clause+ ")")
+	to_write = format_correctly(to_write, "|")
+	print("DNF: ",to_write)
+	to_write = to_cnf(to_write, simplify=True)
+	print("CNF: ",to_write)
+	return str(to_write)
 
 def save_constraints(to_write, filename):
 	f = open(filename, "w")
 	f.write(to_write)
-	print("Constraints have been generated and saved into {}".format(filename))
+	print("\nConstraints have been generated and saved into {}".format(filename))
 	return 0
 
 def generate_constraints(curr_board, filename="constraints.txt"):
-	constraints = ""
+	constraints = []
 	for i in range(len(curr_board)):
 		row = curr_board[i]
 		for j in range(len(row)):
@@ -114,8 +125,8 @@ def generate_constraints(curr_board, filename="constraints.txt"):
 				# find offsets
 				offsets = get_offsets(n, top, bottom, left, right)
 				if offsets != [()]:
-					constraints += offsets_to_constraints(i, j, offsets, curr_board)
-	print(constraints)
+					constraints.append(offsets_to_constraints(i, j, offsets, curr_board))
+	# fix constraints
+	constraints = format_correctly(constraints, "&")
 	save_constraints(constraints, filename)
 	return 0
-	
