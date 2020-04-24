@@ -75,9 +75,10 @@ def clause_to_string(clause):
 
 def format_correctly(to_write, op):
 	ret = "("
-	for elem in to_write:
+	for i in range(len(to_write)):
+		elem = to_write[i]
 		ret += elem 
-		if elem != to_write[-1]:
+		if i != len(to_write)-1:
 			ret += " {} ".format(op)
 	ret += ")"
 	return ret
@@ -112,6 +113,39 @@ def save_constraints(to_write, filename):
 	print("\nConstraints have been generated and saved into {}".format(filename))
 	return 0
 
+def parse_multiple(interval):
+	ret = []
+	num = ""
+	for char in interval:
+		if char == "~":
+			num += "-"
+		if char.isdigit():
+			num += char
+		if char == "|" or char == ")":
+			ret.append(int(num))
+			num = ""
+	return ret
+
+def parse_one(num):
+	ret = ''
+	for char in num:
+		if char == "~":
+			ret += "-"
+		if char.isdigit():
+			ret += char
+	return [int(ret)]
+
+def dpll_format(constraints):
+	ret = []
+	constraints = constraints.split("&")
+	for elem in constraints:
+		# multiple
+		if len(elem) > 7:
+			ret.append(parse_multiple(elem))
+		else:
+			ret.append(parse_one(elem))
+	return ret
+
 def generate_constraints(curr_board, filename="constraints.txt"):
 	constraints = []
 	for i in range(len(curr_board)):
@@ -128,5 +162,8 @@ def generate_constraints(curr_board, filename="constraints.txt"):
 					constraints.append(offsets_to_constraints(i, j, offsets, curr_board))
 	# fix constraints
 	constraints = format_correctly(constraints, "&")
-	save_constraints(constraints, filename)
-	return 0
+	# get rid of the extra brackets
+	constraints = constraints[1:len(constraints)-1]
+	constraints = str(dpll_format(constraints))
+	# save_constraints(constraints, filename)
+	return constraints
