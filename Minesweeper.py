@@ -26,9 +26,8 @@ External:
 
 """
 
-
 class Minesweeper:
-    def __init__(self, width=10, height=10, mines=5):
+    def __init__(self, width=10, height=10, mines=10):
         if width <= 1 or height <= 1:
             print("Board must be at least 2x2")
             return 1, 0
@@ -169,15 +168,14 @@ def cellIDtoCordinate(cords,target):
     return(res[1], res[2])
 
 
-def main(): 
+def game_as_CSP(new_minesweeper, winCount, lossCount, size): 
     # Get minesweeper grid
-    cords = getCellIDs(10)
+    cords = getCellIDs(size)
     
     # Make first move
-    new_minesweeper = Minesweeper()
+    # new_minesweeper = Minesweeper()
     # new_minesweeper.print_board()
     win, turns = new_minesweeper.process_play(0, 0)
-
 
     itrCount = 0
     # Game loop
@@ -188,39 +186,20 @@ def main():
         # Generate clauses
         clauses = generate_constraints(curr_board)
         # VARS = NxN xN 
-        VARS = list(range(0,100))
+        VARS = list(range(0,size*size))
 
 
         # Call DPLL 
         # Sat: res == True,  Unsat: res == False 
         res, allowedMoves = solveDPLL(VARS, clauses, assignment = [])
 
-
-        '''
-        ~~~~~~~~~~~~~~~~
-        ~~~~~~~~~~~~~~~~
-        TO ADD
-
-        if res == False && allowedMoves == []:
-            target = RANDOM PICK
-        elif res == True && allowedMoves != []:
+        if allowedMoves == []:
+            print("UNABLE TO PICK NEXT MOVE --> Choosing a random move!")
+            target = random_choice(new_minesweeper.get_known_board())
+        else:
             target = allowedMoves[0]
-        '''
-        if allowedMoves != []:
-            target = allowedMoves[0]
-        else: 
-            print("UNABLE TO PICK NEXT MOVE")
-            curr_board = new_minesweeper.get_known_board()
-            print(curr_board)
-            break
         
         print(f'Target:  {target}')
-
-        '''
-        ~~~~~~~~~~~~~~~~
-        ~~~~~~~~~~~~~~~~
-        '''
-
 
         # Convert cell ID -> grid cordinate
         # using -target because we using Pos SAT assigned values
@@ -232,19 +211,20 @@ def main():
 
         print(f'ITER #: {itrCount}')
         itrCount +=1 
-    
 
-    lossCount =0 
-    winCount = 0
     if win == 2:
         winCount += 1 
     elif win == 1:
         lossCount += 1
-
+    return winCount, lossCount
 
 
 if __name__ == "__main__":
-    main()
-
-     
-     
+    winCount = 0
+    lossCount = 0
+    i = 0
+    while i < 10:
+        new_minesweeper = Minesweeper()
+        winCount, lossCount = game_as_CSP(new_minesweeper, winCount, lossCount)
+        i += 1
+    print(winCount, lossCount)
