@@ -1,5 +1,6 @@
 import random as r
 from generate import generate_constraints
+from dpll import solveDPLL
 """
 Minesweeper Class:
 Functions:
@@ -147,30 +148,64 @@ def random_choice(curr_board):
                 ret.append((i,j))
     return ret[r.randint(0, len(ret)-1)]
 
-new_minesweeper = Minesweeper()
-# new_minesweeper.print_board()
-win, turns = new_minesweeper.process_play(0, 0)
+def getBoardCords(n):
+    cords = []
+    count = 0
+    for i in range(n):
+        for j in range(n):
+            count +=1
+            cords.append([count, i, j])
 
-curr_board = new_minesweeper.get_known_board()
-print(curr_board)
+    print(f'Cordinates: {cords}')
+    return cords
+
+def convertCord(cords,target):
+    # Conovert into X, Y  cordinates
+    cord = [pos for pos in cords if pos[0] == target]
+    print(f'C: {cord[0][1]}, {cord[0][2]}')
+    return(cord[0][1], cord[0][2])
+
+
+def main(): 
+    # Get minesweeper grid
+    cords = getBoardCords(10)
+    
+    new_minesweeper = Minesweeper()
+    # new_minesweeper.print_board()
+    win, turns = new_minesweeper.process_play(0, 0)
+
+    curr_board = new_minesweeper.get_known_board()
+    print(curr_board)
+
+    clauses = generate_constraints(curr_board)
+    # VARS = NxN xN 
+    VARS = list(range(1,101))
+    res, allowedMoves = solveDPLL(VARS, clauses, assignment = [])
+
+    # failCount = 0 
+    # succCount =0 
+    # if res == False:
+    #     failCount +=1 
+    # else:
+    #     succCount +=1 
+        
+    print(f'Allowed Moves: {allowedMoves}')
+    
+
+    #  Get first of allowed moves
+    target = allowedMoves[0]
+    print(f'target:  {target}')
+    # Choose one from allowed moves 
+    mx,my = convertCord(cords, target)
+    print(f'Making Move at cords: {mx},{my}')
+    new_minesweeper.process_play(mx,my)
+    curr_board = new_minesweeper.get_known_board()
+    print(curr_board)
 
 
 
-clauses = generate_constraints(curr_board)
-# VARS = NxN xN 
-VARS = list(range(1,101))
-res, allowedMoves = solveDPLL(VARS, clauses, assignment = [])
-
-failCount = 0 
-succCount =0 
-if res == False:
-    failCount +=1 
-else:
-    succCount +=1 
-      
-print(f'Allowed Moves: {allowedMoves}')
-
-# Choose one from allowed moves 
+if __name__ == "__main__":
+    main()
 
      
      
