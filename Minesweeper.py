@@ -153,4 +153,24 @@ win, turns = new_minesweeper.process_play(0, 0)
 
 curr_board = new_minesweeper.get_known_board()
 print(curr_board)
-generate_constraints(curr_board)
+
+
+
+clauses = generate_constraints(curr_board)
+# VARS = NxN xN 
+VARS = list(range(1,101))
+res, allowedMoves = solveDPLL(VARS, clauses, assignment = [])
+
+failCount = 0 
+succCount =0 
+if res == False:
+    failCount +=1 
+else:
+    succCount +=1 
+      
+print(f'Allowed Moves: {allowedMoves}')
+
+# Choose one from allowed moves 
+
+     
+     
