@@ -127,8 +127,8 @@ def DPLL(VARS, instance, assignment):
     assignment = copy.deepcopy(assignment)
 
    # Choose next lteral to assign value in model
-    # nxtLit = choose_next_lit(instance)
-    nxtLit = select_literal(instance)
+    nxtLit = choose_next_lit_by_weight(instance)
+    #nxtLit = select_literal(instance)
     assignment.append(nxtLit)
 
     #Check is we reached valid assignment
@@ -180,7 +180,7 @@ def checkValidAssignment(VARS, assignment):
         return False
 
 # Get next literal to assign based on the # of occurances in list of clauses 
-def choose_next_lit(instance):
+def choose_next_lit_by_weight(instance):
     # Store Key: Val pairs of {Literal: Weight}
     weight = dict()
     maxWeight = 0
