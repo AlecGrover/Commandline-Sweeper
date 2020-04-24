@@ -201,6 +201,7 @@ def game_as_CSP(new_minesweeper, winCount, lossCount, size):
         
         print(f'Target:  {target}')
 
+
         # Convert cell ID -> grid cordinate
         # using -target because we using Pos SAT assigned values
         mx,my = cellIDtoCordinate(cords, -target)

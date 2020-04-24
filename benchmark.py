@@ -30,6 +30,7 @@ def test(n, s, m):
     print("CSP success rate: {}".format(winCount_CSP/n))
     print("CSP avg game time: {}".format(overall_time/n))
 
+
 if __name__ == "__main__":
     # add a command line argument
     parser = argparse.ArgumentParser(description='Comparing performance of CSP vs. RL')
