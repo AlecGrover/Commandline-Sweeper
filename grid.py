@@ -2,7 +2,7 @@
 ls = []
 count =  0
 row =0
-n= 2
+n= 3
 for x in range(n):
     for y in range(n):
         

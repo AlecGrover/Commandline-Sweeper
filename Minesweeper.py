@@ -161,9 +161,12 @@ def getBoardCords(n):
 
 def convertCord(cords,target):
     # Conovert into X, Y  cordinates
-    cord = [pos for pos in cords if pos[0] == target]
-    print(f'C: {cord[0][1]}, {cord[0][2]}')
-    return(cord[0][1], cord[0][2])
+    res = []
+    for cord in cords: 
+        if cord[0] == target:
+            res = cord
+
+    return(res[1], res[2])
 
 
 def main(): 
@@ -179,7 +182,7 @@ def main():
 
     clauses = generate_constraints(curr_board)
     # VARS = NxN xN 
-    VARS = list(range(1,101))
+    VARS = list(range(0,100))
     res, allowedMoves = solveDPLL(VARS, clauses, assignment = [])
 
     # failCount = 0 
