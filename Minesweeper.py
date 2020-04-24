@@ -1,7 +1,5 @@
 import random as r
 from generate import generate_constraints
-
-from dpll import solveDPLL
 """
 Minesweeper Class:
 Functions:
@@ -138,6 +136,16 @@ class Minesweeper:
     def get_known_board(self):
         return self._display_board.copy()
 
+def random_choice(curr_board):
+    # choose a random unexplored square in case DPLL fails to find a solution
+    ret = []
+    for i in range(len(curr_board)):
+        row = curr_board[i]
+        for j in range(len(row)):
+            n = row[j]
+            if n == "?":
+                ret.append((i,j))
+    return ret[r.randint(0, len(ret)-1)]
 
 new_minesweeper = Minesweeper()
 # new_minesweeper.print_board()
@@ -145,20 +153,4 @@ win, turns = new_minesweeper.process_play(0, 0)
 
 curr_board = new_minesweeper.get_known_board()
 print(curr_board)
-
-clauses = generate_constraints(curr_board)
-# VARS = NxN xN 
-VARS = list(range(1,101))
-res, allowedMoves = solveDPLL(VARS, clauses, assignment = [])
-
-failCount = 0 
-succCount =0 
-if res == False:
-    failCount +=1 
-else:
-    succCount +=1 
-      
-print(f'Allowed Moves: {allowedMoves}')
-
-     
-     
+generate_constraints(curr_board)
