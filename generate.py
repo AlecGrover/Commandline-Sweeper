@@ -164,7 +164,7 @@ def generate_constraints(curr_board, filename="constraints.txt"):
 	constraints = format_correctly(constraints, "&")
 	# get rid of the extra brackets
 	constraints = constraints[1:len(constraints)-1]
-	constraints = str(dpll_format(constraints))
+	constraints = dpll_format(constraints)
 	# save_constraints(constraints, filename)
 	return constraints
 
