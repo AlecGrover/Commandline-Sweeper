@@ -336,5 +336,5 @@ def solveDPLL(VARS, clauses, assignment =[]):
         print(f'Negative: {reverseNeg}')
     
     print("~~~ Finishing DPLL Execution ~~~")
-    return True, posVar
+    return True, negVar
 
