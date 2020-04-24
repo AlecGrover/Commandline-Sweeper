@@ -84,7 +84,7 @@ def format_correctly(to_write, op):
 	return ret
 
 def offsets_to_constraints(i, j, offsets, curr_board):
-	print("\ncell ({},{})".format(i, j))
+	# print("\ncell ({},{})".format(i, j))
 	to_write = []
 	for combination in offsets:
 		clause = []
@@ -102,15 +102,15 @@ def offsets_to_constraints(i, j, offsets, curr_board):
 			clause = clause_to_string(clause)
 			to_write.append("("+clause+ ")")
 	to_write = format_correctly(to_write, "|")
-	print("DNF: ",to_write)
+	# print("DNF: ",to_write)
 	to_write = to_cnf(to_write, simplify=True)
-	print("CNF: ",to_write)
+	# print("CNF: ",to_write)
 	return str(to_write)
 
 def save_constraints(to_write, filename):
 	f = open(filename, "w")
 	f.write(to_write)
-	print("\nConstraints have been generated and saved into {}".format(filename))
+	# print("\nConstraints have been generated and saved into {}".format(filename))
 	return 0
 
 def parse_multiple(interval):
