@@ -291,17 +291,17 @@ def getPure(instance):
     return pures
 
 
-def main():
+def solveDPLL(VARS, clauses, assignment =[]):
    
-    print("~~~ Beginning Execution ~~~")
+    print("~~~ Beginning DPLL Execution ~~~")
 
     #clauses = test_sat()
-    clauses = test_sat_2()
+    #clauses = test_sat_2()
     #clauses = test_unsat()
     print(f'Clauses: {clauses}')
 
     # Variables = board size in minesweeper i.e. 5x5 = 25 
-    VARS = [1,2,3,4,5,6,7,8,9,10]
+    #VARS = [1,2,3,4,5,6,7,8,9,10]
 
 
     sol = DPLL( VARS, clauses, assignment=[])
@@ -334,10 +334,7 @@ def main():
         reverseNeg = negVar[::-1]
         print(f'Positive: {posVar}')
         print(f'Negative: {reverseNeg}')
-       
+    
+    print("~~~ Finishing DPLL Execution ~~~")
     return True
 
-
-
-if __name__ == "__main__":
-    main()

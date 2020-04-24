@@ -167,3 +167,4 @@ def generate_constraints(curr_board, filename="constraints.txt"):
 	constraints = str(dpll_format(constraints))
 	# save_constraints(constraints, filename)
 	return constraints
+

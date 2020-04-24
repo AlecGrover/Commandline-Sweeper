@@ -1,5 +1,5 @@
 import time 
-
+import generate
 def averageList(nums):
     sums = 0
     for i in nums:
