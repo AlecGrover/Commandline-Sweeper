@@ -195,9 +195,11 @@ def main():
     #  Get first of allowed moves
     target = allowedMoves[0]
     print(f'target:  {target}')
-    # Choose one from allowed moves 
+
+    # Choose first allowed moves 
     mx,my = convertCord(cords, target)
     print(f'Making Move at cords: {mx},{my}')
+
     new_minesweeper.process_play(mx,my)
     curr_board = new_minesweeper.get_known_board()
     print(curr_board)

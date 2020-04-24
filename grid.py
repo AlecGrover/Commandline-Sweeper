@@ -1,14 +1,21 @@
 
 ls = []
-count = 0
+count =  0
 row =0
-for i in range(2):
-    for j in range(2):
-        count +=1
-        ls.append([count, i, j])
+n= 2
+for x in range(n):
+    for y in range(n):
+        
+        count +=1 
+        
+        print(f'{count},{x},{y}')
+                
+        #ls.append([count, j, 2-i-1])
+    
 
-print(ls)
+
+#print(ls)
 
 
-cord = [pos for pos in ls if pos[0] == 3]
-print(cord[0][1], cord[0][2])
+#cord = [pos for pos in ls if pos[0] == 3]
+#print(cord[0][1], cord[0][2])
