@@ -312,7 +312,7 @@ def solveDPLL(VARS, clauses, assignment =[]):
     # If our sol contains empty clause -> UNSAT 
     if sol == []:
         print("UNSAT")
-        return False
+        return False,[]
     else:  
         print("SAT")
         # Prints variable assignment 
@@ -336,5 +336,5 @@ def solveDPLL(VARS, clauses, assignment =[]):
         print(f'Negative: {reverseNeg}')
     
     print("~~~ Finishing DPLL Execution ~~~")
-    return True
+    return True, posVar
 

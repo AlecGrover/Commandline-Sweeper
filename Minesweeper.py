@@ -149,4 +149,16 @@ print(curr_board)
 clauses = generate_constraints(curr_board)
 # VARS = NxN xN 
 VARS = list(range(1,101))
-res = solveDPLL(VARS, clauses, assignment = [])
+res, allowedMoves = solveDPLL(VARS, clauses, assignment = [])
+
+failCount = 0 
+succCount =0 
+if res == False:
+    failCount +=1 
+else:
+    succCount +=1 
+      
+print(f'Allowed Moves: {allowedMoves}')
+
+     
+     
