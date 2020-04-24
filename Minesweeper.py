@@ -197,7 +197,7 @@ def game_as_CSP(new_minesweeper, winCount, lossCount, size):
             print("UNABLE TO PICK NEXT MOVE --> Choosing a random move!")
             target = random_choice(new_minesweeper.get_known_board())
         else:
-            target = allowedMoves[0]
+            target = allowedMoves[-1]
         
         print(f'Target:  {target}')
 
